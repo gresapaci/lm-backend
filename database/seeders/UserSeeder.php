@@ -55,6 +55,24 @@ class UserSeeder extends Seeder
             ],
             [
                 'user' => [
+                    'first_name' => 'Fatmir',
+                    'last_name' => 'Krasniqi',
+                    'gender' => 'male',
+                    'email' => 'fatmir.krasniqi@example.com',
+                    'date_of_birth' => '1990-04-12',
+                    'academic_year' => null,
+                    'password' => Hash::make('password123'),
+                    'profile_completed' => true,
+                ],
+                'info' => [
+                    'address' => 'Rruga Bill Klinton, Prishtinë',
+                    'tel' => '+383 44 789 012',
+                    'about' => 'Software engineering instructor with a focus on backend development and cloud architecture.',
+                ],
+                'role' => 'Instructor'
+            ],
+            [
+                'user' => [
                     'first_name' => 'Dritan',
                     'last_name' => 'Prifti',
                     'gender' => 'male',

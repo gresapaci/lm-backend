@@ -538,11 +538,11 @@ class CourseMaterialController extends Controller
         try {
             $user = $request->user();
 
-            // check if user is Admin - restrict access
-            if ($user->hasRole("Admin")) {
+            // check if user is Admin/Instructor - restrict access
+            if ($user->hasAnyRole(["Admin", "Instructor"])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'This endpoint is not accessible to admins.',
+                    'message' => 'This endpoint is not accessible to admins or instructors.',
                 ], 403);
             }
 
@@ -748,10 +748,9 @@ class CourseMaterialController extends Controller
 
     public function markSectionDone(Request $request, int $sectionId): JsonResponse
     {
-        try {
-            DB::beginTransaction();
-            $user = $request->user();
+        $user = $request->user();
 
+        try {
             $section = CourseSection::with([
                 'module:id,course_id,title,description,duration',
                 'module.course:id,title,duration',
@@ -794,79 +793,62 @@ class CourseMaterialController extends Controller
                 ], 400);
             }
 
-            UserCourseSectionProgress::create([
-                "user_id" => $user->id,
-                "course_section_id" => $sectionId
-            ]);
+            DB::transaction(function () use ($user, $section, $sectionId, $userProgress) {
+                UserCourseSectionProgress::create([
+                    "user_id" => $user->id,
+                    "course_section_id" => $sectionId
+                ]);
 
-            // Ensure completedSectionIds is an array
-            $completedSectionIds = is_array($userProgress->completed_section_ids) ? $userProgress->completed_section_ids : [];
+                // Ensure completedSectionIds is an array
+                $completedSectionIds = is_array($userProgress->completed_section_ids) ? $userProgress->completed_section_ids : [];
 
-            // Check if the section ID is already in the completedSectionIds array
-            if (!in_array($sectionId, $completedSectionIds)) {
-                $completedSectionIds[] = $section->id; // Add the completed section ID
-            }
-
-            // Update the user progress with the new completed section IDs
-            $userProgress->completed_section_ids = $completedSectionIds;
-            $userProgress->completed_sections++; // Increase completed sections
-            $userProgress->pending_sections = max(0, $userProgress->pending_sections - 1); // Decrease pending sections
-            $userProgress->save();
-
-            $moduleId = $section->module_id;
-            $allSectionIds = CourseSection::where('module_id', $moduleId)->pluck('id')->toArray(); // Get all section IDs for the module
-            $completedModuleSections = array_intersect($allSectionIds, $completedSectionIds); // Check completed sections
-
-            if (count($completedModuleSections) === count($allSectionIds)) {
-                // If all sections are completed
-                $completed_module_ids = is_array($userProgress->completed_module_ids) ? $userProgress->completed_module_ids : [];
-
-                if (!in_array($moduleId, $completed_module_ids)) {
-                    $completed_module_ids[] = $moduleId; // Add the completed module ID
+                // Check if the section ID is already in the completedSectionIds array
+                if (!in_array($sectionId, $completedSectionIds)) {
+                    $completedSectionIds[] = $section->id; // Add the completed section ID
                 }
 
-                $userProgress->completed_module_ids = $completed_module_ids;
-                $userProgress->completed_modules++; // Increase completed modules
-                $userProgress->pending_modules = max(0, $userProgress->pending_modules - 1); // Decrease pending modules
+                // Update the user progress with the new completed section IDs
+                $userProgress->completed_section_ids = $completedSectionIds;
+                $userProgress->completed_sections++; // Increase completed sections
+                $userProgress->pending_sections = max(0, $userProgress->pending_sections - 1); // Decrease pending sections
                 $userProgress->save();
-            }
 
-            // Check if course is completed after section completion
-            if ($userProgress->pending_sections == 0 && $userProgress->pending_modules == 0 && !$userProgress->awarded) {
-                $userProgress->awarded = true;
+                $moduleId = $section->module_id;
+                $allSectionIds = CourseSection::where('module_id', $moduleId)->pluck('id')->toArray(); // Get all section IDs for the module
+                $completedModuleSections = array_intersect($allSectionIds, $completedSectionIds); // Check completed sections
 
-                // Award points for course completion based on module count
-                $moduleCount = CourseModule::where('course_id', $section->module->course_id)->count();
+                if (count($completedModuleSections) === count($allSectionIds)) {
+                    // If all sections are completed
+                    $completed_module_ids = is_array($userProgress->completed_module_ids) ? $userProgress->completed_module_ids : [];
 
-                $points = match (true) {
-                    $moduleCount == 1 => 100,
-                    $moduleCount == 2 => 111,
-                    $moduleCount == 3, $moduleCount == 4 => 123,
-                    $moduleCount == 5 => 155,
-                    $moduleCount > 5 => 199,
-                    default => 0,
-                };
+                    if (!in_array($moduleId, $completed_module_ids)) {
+                        $completed_module_ids[] = $moduleId; // Add the completed module ID
+                    }
 
-                $scoreboard = Scoreboard::firstOrCreate(
-                    ['user_id' => $user->id],
-                    ['score' => 0]
-                );
+                    $userProgress->completed_module_ids = $completed_module_ids;
+                    $userProgress->completed_modules++; // Increase completed modules
+                    $userProgress->pending_modules = max(0, $userProgress->pending_modules - 1); // Decrease pending modules
+                    $userProgress->save();
+                }
 
-                $scoreboard->score += $points;
-                $scoreboard->save();
+                // Check if course is completed after section completion.
+                // The "awarded" flag guarantees the +1 point is granted exactly once per course.
+                if ($userProgress->pending_sections == 0 && $userProgress->pending_modules == 0 && !$userProgress->awarded) {
+                    $userProgress->awarded = true;
+                    $userProgress->save();
 
-                $userProgress->save();
-            }
-
-            DB::commit();
+                    // Exactly +1 point per completed course. Use an atomic DB increment
+                    // (not a read-modify-write in PHP) so concurrent completions can't race.
+                    Scoreboard::firstOrCreate(['user_id' => $user->id], ['score' => 0]);
+                    Scoreboard::where('user_id', $user->id)->increment('score', 1);
+                }
+            });
 
             return response()->json([
                 "success" => true,
                 "message" => "Section marked as completed successfully",
             ], 200);
         } catch (\Exception $e) {
-            DB::rollBack();
-
             \Log::error("Error marking section as done", [
                 'section_id' => $sectionId,
                 'user_id' => $user->id,

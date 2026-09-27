@@ -24,7 +24,7 @@ class ChunkUploadController extends Controller
         try {
             $user = $request->user();
 
-            if (!$user || !$user->hasRole("Admin")) {
+            if (!$user || !$user->hasAnyRole(["Admin", "Instructor"])) {
                 return response()->json([
                     "success" => false,
                     "message" => "Unauthorized access."
@@ -147,7 +147,7 @@ class ChunkUploadController extends Controller
         try {
             $user = $request->user();
 
-            if (!$user || !$user->hasRole("Admin")) {
+            if (!$user || !$user->hasAnyRole(["Admin", "Instructor"])) {
                 return response()->json([
                     "success" => false,
                     "message" => "Unauthorized access."
@@ -284,7 +284,7 @@ class ChunkUploadController extends Controller
         try {
             $user = $request->user();
 
-            if (!$user || !$user->hasRole("Admin")) {
+            if (!$user || !$user->hasAnyRole(["Admin", "Instructor"])) {
                 return response()->json([
                     "success" => false,
                     "message" => "Unauthorized access."

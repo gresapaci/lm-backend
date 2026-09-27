@@ -152,6 +152,7 @@ class AuthController extends Controller
                 $valid_emails = [];
                 $existing_users = [];
                 $successfully_invited = [];
+                $failed_emails = [];
 
                 foreach ($invited_users as $email) {
                     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -173,7 +174,7 @@ class AuthController extends Controller
                             $registrionCode = strtoupper(Str::random(6));
                             $token = Str::random(64);
 
-                            EmailVerificationToken::create([
+                            $verificationToken = EmailVerificationToken::create([
                                 "email" => $email,
                                 "code" => $registrionCode,
                                 "token" => $token
@@ -197,17 +198,19 @@ class AuthController extends Controller
 
 
                         } catch (\Exception $e) {
+                            // Don't leave a token behind for an invite that never actually reached the recipient.
+                            if (isset($verificationToken)) {
+                                $verificationToken->delete();
+                            }
+
                             \Log::error("Error sending registration invite", [
                                 "email" => $email,
                                 "error" => $e->getMessage()
                             ]);
 
-                            return response()->json([
-                                "message" => "Error sending registration invite",
-                                "email" => $email,
-                                "error" => $e->getMessage(),
-                                "success" => false
-                            ], 500);
+                            $failed_emails[] = $email;
+                        } finally {
+                            unset($verificationToken);
                         }
 
 
@@ -217,6 +220,7 @@ class AuthController extends Controller
                 $invalid_emails_string = implode(", ", $invalid_emails);
                 $existing_users_string = implode(", ", $existing_users);
                 $successfully_invited_string = implode(", ", $successfully_invited);
+                $failed_emails_string = implode(", ", $failed_emails);
 
                 return response()->json([
                     "message" => "Registration invite process completed",
@@ -227,6 +231,8 @@ class AuthController extends Controller
                     "invalid_count" => count($invalid_emails),
                     "existing_users" => $existing_users_string,
                     "existing_count" => count($existing_users),
+                    "failed_emails" => $failed_emails_string,
+                    "failed_count" => count($failed_emails),
                     "success" => true
                 ], 200);
 
@@ -612,7 +618,7 @@ class AuthController extends Controller
             }
 
             $validator = Validator::make($request->all(), [
-                "academic_year" => 'required|integer|min:' . (date("Y") - 10) . '|max:' . (date("Y")),
+                "academic_year" => 'required|integer|min:1|max:6',
                 "address" => 'required|string|max:255',
                 "telephone" => 'nullable|string|max:20',
                 "date_of_birth" => 'required|date|before:today',

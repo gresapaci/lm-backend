@@ -222,7 +222,7 @@ class UserController extends Controller
                 "first_name" => "required|string|min:2|max:255",
                 "last_name" => "required|string|min:2|max:255",
                 "gender" => "required|in:male,female,diverse",
-                'academic_year' => 'required|integer|min:' . (date("Y") - 80) . '|max:' . (date("Y")),
+                'academic_year' => 'required|integer|min:1|max:6',
                 "date_of_birth" => "required|date|before:today",
                 "about" => "nullable|string|max:1000",
                 'address' => 'nullable|string|max:255',

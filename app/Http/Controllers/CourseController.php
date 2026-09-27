@@ -555,7 +555,12 @@ class CourseController extends Controller
             $searchTerm = $request->input("searchTerm");
 
             // Build the query for active courses only
-            $query = Course::with(['createdBy:id,first_name,last_name'])
+            $query = Course::with([
+                'createdBy:id,first_name,last_name',
+                'progress' => function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                }
+            ])
                 ->where('status', 1);
 
             // Apply search filter if search term is provided

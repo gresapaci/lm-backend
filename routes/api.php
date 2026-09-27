@@ -1,6 +1,5 @@
 <?php
 
-use App\Mail\TestMail;
 use Illuminate\Http\Request;
 use App\Models\CourseMaterial;
 use Illuminate\Support\Facades\Http;
@@ -44,10 +43,15 @@ Route::controller(AuthController::class)->prefix('auth')->middleware('api')->gro
 Route::controller(UserController::class)->prefix('users')->middleware(['api', 'jwt.auth.token'])->group(function () {
     Route::middleware('role:Admin')->group(function () {
         Route::get('all-users', 'allUsers')->name('users.allUsers');
-        Route::get('/active-users-for-dropdown', 'getActiveUsersForDropdown')->name('users.getActiveUsersForDropdown');
-        Route::get('/active-users-by-role', 'getActiveUsersByRole')->name('users.getActiveUsersByRole');
         Route::post('change-role', "changeUserRole")->name("users.changeUserRole");
         Route::post('change-status', "changeAccountStatus")->name("users.changeAccountStatus");
+    });
+
+    // Read-only lookups also needed by Instructors (e.g. Course Stats' user filter,
+    // Random Game's user picker) - not user-management actions.
+    Route::middleware('role:Admin|Instructor')->group(function () {
+        Route::get('/active-users-for-dropdown', 'getActiveUsersForDropdown')->name('users.getActiveUsersForDropdown');
+        Route::get('/active-users-by-role', 'getActiveUsersByRole')->name('users.getActiveUsersByRole');
     });
 
     Route::get('/{id}/profile', 'getUserProfileById')->name('users.getUserProfileById');
@@ -59,7 +63,7 @@ Route::controller(UserController::class)->prefix('users')->middleware(['api', 'j
 });
 
 Route::controller(CourseController::class)->prefix('courses')->middleware(['api', 'jwt.auth.token'])->group(function () {
-    Route::middleware('role:Admin')->group(function () {
+    Route::middleware('role:Admin|Instructor')->group(function () {
         Route::get('/', 'getAllCourses')->name('courses.getAllCourses');
         Route::post("/", "createCourse")->name("courses.createCourse");
         Route::get('/{courseId}', 'getCourseById')->name('courses.getCourseById');
@@ -84,7 +88,7 @@ Route::controller(ChunkUploadController::class)->prefix('chunks')->middleware(['
 });
 
 Route::controller(CourseModuleController::class)->prefix('modules')->middleware(['api', 'jwt.auth.token'])->group(function () {
-    Route::middleware('role:Admin')->group(function () {
+    Route::middleware('role:Admin|Instructor')->group(function () {
         Route::get('/', 'getAllModules')->name('courses.getAllModules');
         Route::get('/{moduleId}', 'getModuleById')->name('courses.getModuleById');
         Route::post('/', 'createModule')->name('courses.createModule');
@@ -94,7 +98,7 @@ Route::controller(CourseModuleController::class)->prefix('modules')->middleware(
 });
 
 Route::controller(CourseSectionController::class)->prefix('sections')->middleware(['api', 'jwt.auth.token'])->group(function () {
-    Route::middleware('role:Admin')->group(function () {
+    Route::middleware('role:Admin|Instructor')->group(function () {
         Route::get('/', 'getAllSections')->name('sections.getAllSections');
         Route::delete('/{sectionId}', 'deleteSection')->name('sections.deleteSection');
         Route::post('/', 'createSection')->name('sections.createSection');
@@ -104,7 +108,7 @@ Route::controller(CourseSectionController::class)->prefix('sections')->middlewar
 });
 
 Route::controller(CourseMaterialController::class)->prefix('materials')->middleware(['api', 'jwt.auth.token'])->group(function () {
-    Route::middleware('role:Admin')->group(function () {
+    Route::middleware('role:Admin|Instructor')->group(function () {
         Route::get('/section/{sectionId}', 'getCourseMaterialsBySectionId')->name('materials.getCourseMaterialsBySectionId');
         Route::post('/', 'createMaterial')->name('materials.createMaterial');
         Route::delete('/{materialId}', 'deleteMaterial')->name('materials.materialId');
@@ -119,7 +123,7 @@ Route::controller(CourseMaterialController::class)->prefix('materials')->middlew
 });
 
 Route::controller(UserCourseProgressController::class)->prefix('course-progress')->middleware(['api', 'jwt.auth.token'])->group(function () {
-    Route::middleware('role:Admin')->group(function () {
+    Route::middleware('role:Admin|Instructor')->group(function () {
         Route::get('/', 'getUserCourseProgress')->name('course-progress.getUserCourseProgress');
     });
 });
@@ -148,19 +152,6 @@ Route::controller(UserListController::class)->prefix("lists")->middleware(['api'
 
     Route::get('/{id}/users', action: 'getUsersInList')->name('lists.getUsersInList');
     Route::post('/{id}/pick-random-winner', 'pickRandomWinner')->name('lists.pickRandomWinner');
-});
-
-Route::post("test-mail-send", function () {
-    $data = [
-        "title" => "Test Mail FROM ROUTE",
-        "message" => "This is a test mail"
-    ];
-
-    // here we need to send an actual email
-    Mail::to("nas2dev@gmail.com")->send(new TestMail($data));
-    return response()->json([
-        "message" => "Mail sent successfully"
-    ]);
 });
 
 Route::get('zen-quote', function () {

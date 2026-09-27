@@ -24,7 +24,7 @@ class DashboardController extends Controller
         try {
             $user = $request->user();
 
-            if ($user->hasRole("Admin")) {
+            if ($user->hasAnyRole(["Admin", "Instructor"])) {
                 return $this->adminDashboard();
             }
 
