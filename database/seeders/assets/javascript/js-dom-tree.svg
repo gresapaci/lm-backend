@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="440" viewBox="0 0 900 440" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="900" height="440" fill="#ffffff"/>
+  <text x="450" y="40" text-anchor="middle" font-size="26" font-weight="700" fill="#1f2937">The DOM Tree</text>
+  <g stroke="#94a3b8" stroke-width="2">
+    <line x1="450" y1="95" x2="450" y2="130"/>
+    <line x1="450" y1="165" x2="250" y2="210"/><line x1="450" y1="165" x2="650" y2="210"/>
+    <line x1="250" y1="245" x2="250" y2="290"/>
+    <line x1="650" y1="245" x2="530" y2="290"/><line x1="650" y1="245" x2="770" y2="290"/>
+    <line x1="530" y1="325" x2="530" y2="370"/><line x1="770" y1="325" x2="770" y2="370"/>
+  </g>
+  <g font-size="17" text-anchor="middle">
+    <rect x="370" y="60" width="160" height="35" rx="8" fill="#1f2937"/><text x="450" y="84" fill="#fff">document</text>
+    <rect x="390" y="130" width="120" height="35" rx="8" fill="#f97316"/><text x="450" y="154" fill="#fff">&lt;html&gt;</text>
+    <rect x="190" y="210" width="120" height="35" rx="8" fill="#0ea5e9"/><text x="250" y="234" fill="#fff">&lt;head&gt;</text>
+    <rect x="590" y="210" width="120" height="35" rx="8" fill="#0ea5e9"/><text x="650" y="234" fill="#fff">&lt;body&gt;</text>
+    <rect x="190" y="290" width="120" height="35" rx="8" fill="#22c55e"/><text x="250" y="314" fill="#fff">&lt;title&gt;</text>
+    <rect x="470" y="290" width="120" height="35" rx="8" fill="#22c55e"/><text x="530" y="314" fill="#fff">&lt;h1&gt;</text>
+    <rect x="710" y="290" width="120" height="35" rx="8" fill="#22c55e"/><text x="770" y="314" fill="#fff">&lt;ul&gt;</text>
+    <rect x="455" y="370" width="150" height="35" rx="8" fill="#e2e8f0"/><text x="530" y="394" fill="#1f2937">"Hello" (text)</text>
+    <rect x="710" y="370" width="120" height="35" rx="8" fill="#a855f7"/><text x="770" y="394" fill="#fff">&lt;li&gt; ×3</text>
+  </g>
+  <text x="40" y="428" font-size="15" fill="#475569">document.querySelector("ul").children → HTMLCollection of &lt;li&gt; elements</text>
+</svg>

@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             CourseModuleSeeder::class,
             CourseSectionSeeder::class,
             CourseMaterialSeeder::class,
+            JavaScriptCourseSeeder::class,
         ]);
     }
 }

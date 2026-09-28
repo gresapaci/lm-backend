@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>To-Do App — Starter</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: "Segoe UI", Arial, sans-serif; background: #f1f5f9; display: flex; justify-content: center; padding: 40px 16px; margin: 0; }
+    .app { background: #fff; width: 100%; max-width: 480px; border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+    h1 { margin-top: 0; }
+    form { display: flex; gap: 8px; }
+    input[type="text"] { flex: 1; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; }
+    button { padding: 10px 16px; border: 0; border-radius: 8px; background: #2563eb; color: #fff; cursor: pointer; font-size: 15px; }
+    ul { list-style: none; padding: 0; margin: 20px 0; }
+    li { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #e2e8f0; }
+    li.done span { text-decoration: line-through; color: #94a3b8; }
+    li span { flex: 1; }
+    li .delete { background: #ef4444; padding: 4px 10px; font-size: 13px; }
+    .filters { display: flex; gap: 6px; }
+    .filters button { background: #e2e8f0; color: #1f2937; }
+    .filters button.active { background: #1f2937; color: #fff; }
+    .footer { display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>My To-Dos</h1>
+
+    <form id="todo-form">
+      <input id="todo-input" type="text" placeholder="What needs to be done?" autocomplete="off">
+      <button type="submit">Add</button>
+    </form>
+
+    <ul id="todo-list"></ul>
+
+    <div class="footer">
+      <span id="counter">0 items left</span>
+      <div class="filters">
+        <button data-filter="all" class="active">All</button>
+        <button data-filter="active">Active</button>
+        <button data-filter="done">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*
+     * YOUR TASKS
+     * 1. When the form is submitted, add a new todo (ignore empty input) and clear the input.
+     * 2. Render every todo as <li> with a checkbox, the text in a <span>, and a "Delete" button.
+     * 3. Clicking the checkbox toggles `done`; clicking Delete removes the todo.
+     *    Use ONE click listener on #todo-list (event delegation) — not one per item.
+     * 4. Show "N items left" (only todos that are not done).
+     * 5. Filter buttons show All / Active / Done todos.
+     * 6. BONUS: persist todos in localStorage so they survive a page refresh.
+     * 7. BONUS: double-click on a todo's text to edit it.
+     */
+
+    const form = document.querySelector("#todo-form");
+    const input = document.querySelector("#todo-input");
+    const list = document.querySelector("#todo-list");
+    const counter = document.querySelector("#counter");
+    const filterButtons = document.querySelectorAll(".filters button");
+
+    let todos = [];          // { id: number, text: string, done: boolean }
+    let currentFilter = "all";
+
+    function render() {
+      // TODO: clear the list, build <li> elements for the visible todos, update the counter
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      // TODO
+    });
+
+    list.addEventListener("click", (event) => {
+      // TODO: find the clicked <li> with event.target.closest("li") and read its data-id
+    });
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        // TODO
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>

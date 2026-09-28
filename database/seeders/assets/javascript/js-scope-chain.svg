@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="900" height="460" fill="#ffffff"/>
+  <text x="450" y="40" text-anchor="middle" font-size="26" font-weight="700" fill="#1f2937">Scope Chain &amp; Closures</text>
+  <rect x="40" y="65" width="820" height="370" rx="16" fill="#ecfccb" stroke="#65a30d" stroke-width="2"/>
+  <text x="65" y="98" font-size="19" font-weight="700" fill="#365314">Global scope</text>
+  <text x="65" y="126" font-size="16" fill="#1f2937" font-family="Consolas, monospace">const greeting = "Hello";</text>
+  <rect x="80" y="145" width="740" height="270" rx="14" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="105" y="178" font-size="19" font-weight="700" fill="#0c4a6e">Function scope: makeCounter()</text>
+  <text x="105" y="206" font-size="16" fill="#1f2937" font-family="Consolas, monospace">let count = 0;</text>
+  <rect x="120" y="225" width="660" height="170" rx="12" fill="#fae8ff" stroke="#a21caf" stroke-width="2"/>
+  <text x="145" y="258" font-size="19" font-weight="700" fill="#701a75">Inner function: increment()</text>
+  <text x="145" y="288" font-size="16" fill="#1f2937" font-family="Consolas, monospace">count++;   // found in makeCounter scope</text>
+  <text x="145" y="314" font-size="16" fill="#1f2937" font-family="Consolas, monospace">greeting;  // found in global scope</text>
+  <text x="145" y="340" font-size="16" fill="#1f2937" font-family="Consolas, monospace">missing;   // ReferenceError</text>
+  <text x="145" y="375" font-size="15" fill="#475569">Lookup goes outward: inner → outer → global. Never inward.</text>
+</svg>

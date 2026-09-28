@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JavaScript Cheat Sheet</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; margin: 0; background: #f8fafc; color: #1f2937; }
+  header { background: #f7df1e; padding: 24px 32px; }
+  header h1 { margin: 0; font-size: 28px; color: #111; }
+  header p { margin: 4px 0 0; }
+  main { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; padding: 24px 32px; }
+  section { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; }
+  h2 { font-size: 18px; margin: 0 0 10px; color: #0f172a; border-bottom: 2px solid #f7df1e; padding-bottom: 6px; }
+  pre { background: #0f172a; color: #e2e8f0; padding: 12px; border-radius: 8px; font-size: 13px; overflow-x: auto; margin: 0; }
+  @media print { body { background: #fff; } section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>JavaScript Cheat Sheet</h1>
+  <p>Complete JavaScript: From Fundamentals to Modern JS — quick reference</p>
+</header>
+<main>
+<section><h2>Variables</h2><pre>const PI = 3.14;      // cannot be reassigned
+let count = 0;        // block-scoped, reassignable
+var old = true;       // function-scoped, avoid
+
+// Destructuring
+const { name, age = 18 } = user;
+const [first, ...rest] = [1, 2, 3];</pre></section>
+
+<section><h2>Types &amp; Checks</h2><pre>typeof "hi"        // "string"
+typeof 42          // "number"
+typeof null        // "object" (legacy bug)
+Array.isArray([])  // true
+Number.isNaN(NaN)  // true
+
+// Always prefer strict equality
+1 === "1"  // false
+1 == "1"   // true (coercion)</pre></section>
+
+<section><h2>Strings</h2><pre>const s = `Hello, ${name}!`;
+s.length; s.toUpperCase();
+s.includes("lo"); s.startsWith("He");
+s.slice(0, 5); s.split(", ");
+s.trim(); s.replaceAll("l", "L");
+s.padStart(10, "*");</pre></section>
+
+<section><h2>Control Flow</h2><pre>if (x &gt; 0) { } else if (x &lt; 0) { } else { }
+
+const label = age &gt;= 18 ? "adult" : "minor";
+
+switch (day) {
+  case "sat": case "sun": weekend(); break;
+  default: work();
+}
+
+const city = user?.address?.city ?? "Unknown";</pre></section>
+
+<section><h2>Loops</h2><pre>for (let i = 0; i &lt; 5; i++) { }
+for (const item of array) { }   // values
+for (const key in object) { }   // keys
+while (cond) { }
+do { } while (cond);
+
+break;     // exit loop
+continue;  // skip to next iteration</pre></section>
+
+<section><h2>Functions</h2><pre>function add(a, b = 0) { return a + b; }
+const mul = function (a, b) { return a * b; };
+const sq = (x) =&gt; x * x;
+const sum = (...nums) =&gt; nums.reduce((a, n) =&gt; a + n, 0);
+
+// Closure
+function counter() {
+  let c = 0;
+  return () =&gt; ++c;
+}</pre></section>
+
+<section><h2>Array Methods</h2><pre>arr.map(x =&gt; x * 2)          // transform
+arr.filter(x =&gt; x &gt; 2)       // keep some
+arr.reduce((acc, x) =&gt; acc + x, 0)
+arr.find(x =&gt; x.id === 3)    // first match
+arr.some(x =&gt; x &lt; 0)         // any?
+arr.every(x =&gt; x &gt; 0)        // all?
+arr.includes(5)
+arr.toSorted((a, b) =&gt; a - b) // non-mutating
+arr.push(x); arr.pop(); arr.at(-1);</pre></section>
+
+<section><h2>Objects</h2><pre>const user = { name: "Ana", greet() { return "Hi"; } };
+Object.keys(user); Object.values(user);
+Object.entries(user);
+const copy = { ...user, age: 25 };
+const deep = structuredClone(user);
+"name" in user;  user.hasOwnProperty("name");
+
+JSON.stringify(user);
+JSON.parse('{"a":1}');</pre></section>
+
+<section><h2>DOM</h2><pre>const el = document.querySelector("#app");
+const items = document.querySelectorAll(".item");
+el.textContent = "Hello";
+el.classList.add("active"); el.classList.toggle("dark");
+el.setAttribute("data-id", "7");
+el.dataset.id;   // "7"
+
+const li = document.createElement("li");
+list.append(li);  li.remove();</pre></section>
+
+<section><h2>Events</h2><pre>btn.addEventListener("click", (e) =&gt; {
+  e.preventDefault();
+  console.log(e.target);
+});
+
+// Delegation: one listener for many children
+list.addEventListener("click", (e) =&gt; {
+  const li = e.target.closest("li");
+  if (li) li.classList.toggle("done");
+});</pre></section>
+
+<section><h2>Promises &amp; async/await</h2><pre>fetch("/api/users")
+  .then(res =&gt; res.json())
+  .then(data =&gt; console.log(data))
+  .catch(err =&gt; console.error(err));
+
+async function load() {
+  try {
+    const res = await fetch("/api/users");
+    if (!res.ok) throw new Error(res.status);
+    return await res.json();
+  } catch (err) { console.error(err); }
+}
+
+await Promise.all([p1, p2]);</pre></section>
+
+<section><h2>Classes &amp; Modules</h2><pre>class Animal {
+  #secret = 1;               // private field
+  constructor(name) { this.name = name; }
+  speak() { return `${this.name} makes a sound`; }
+  static create(n) { return new Animal(n); }
+}
+class Dog extends Animal {
+  speak() { return `${super.speak()}: Woof`; }
+}
+
+export default Dog;
+export const VERSION = "1.0";
+import Dog, { VERSION } from "./dog.js";</pre></section>
+
+<section><h2>Error Handling &amp; Debugging</h2><pre>try {
+  risky();
+} catch (err) {
+  console.error(err.message);
+} finally {
+  cleanup();
+}
+
+throw new Error("Something failed");
+
+console.table(arrayOfObjects);
+console.time("t"); /* ... */ console.timeEnd("t");
+debugger;  // pauses in DevTools</pre></section>
+
+<section><h2>Storage &amp; Timers</h2><pre>localStorage.setItem("todos", JSON.stringify(todos));
+const saved = JSON.parse(localStorage.getItem("todos") ?? "[]");
+
+const id = setTimeout(fn, 1000);  clearTimeout(id);
+const iv = setInterval(fn, 1000); clearInterval(iv);</pre></section>
+</main>
+</body>
+</html>

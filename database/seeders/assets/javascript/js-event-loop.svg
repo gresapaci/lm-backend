@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460" font-family="Segoe UI, Arial, sans-serif">
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker></defs>
+  <rect width="900" height="460" fill="#ffffff"/>
+  <text x="450" y="40" text-anchor="middle" font-size="26" font-weight="700" fill="#1f2937">The Event Loop</text>
+  <rect x="40" y="70" width="220" height="300" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="150" y="100" text-anchor="middle" font-size="19" font-weight="700" fill="#7f1d1d">Call Stack</text>
+  <rect x="65" y="300" width="170" height="40" rx="6" fill="#fff" stroke="#dc2626"/><text x="150" y="326" text-anchor="middle" font-size="15">main()</text>
+  <rect x="65" y="252" width="170" height="40" rx="6" fill="#fff" stroke="#dc2626"/><text x="150" y="278" text-anchor="middle" font-size="15">console.log()</text>
+  <rect x="340" y="70" width="220" height="140" rx="12" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="450" y="100" text-anchor="middle" font-size="19" font-weight="700" fill="#312e81">Web APIs</text>
+  <text x="450" y="132" text-anchor="middle" font-size="15">setTimeout, fetch,</text>
+  <text x="450" y="156" text-anchor="middle" font-size="15">DOM events, timers</text>
+  <rect x="620" y="70" width="240" height="120" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="740" y="100" text-anchor="middle" font-size="18" font-weight="700" fill="#14532d">Microtask Queue</text>
+  <text x="740" y="132" text-anchor="middle" font-size="15">Promise .then / await</text>
+  <text x="740" y="156" text-anchor="middle" font-size="15">queueMicrotask()</text>
+  <rect x="620" y="240" width="240" height="120" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="740" y="270" text-anchor="middle" font-size="18" font-weight="700" fill="#78350f">Task (Macrotask) Queue</text>
+  <text x="740" y="302" text-anchor="middle" font-size="15">setTimeout callbacks</text>
+  <text x="740" y="326" text-anchor="middle" font-size="15">click / input events</text>
+  <g stroke="#475569" stroke-width="2" fill="none" marker-end="url(#a)">
+    <path d="M260 140 L336 140"/>
+    <path d="M560 130 L616 130"/>
+    <path d="M560 180 L616 280"/>
+    <path d="M620 170 C 450 250, 350 260, 264 250"/>
+    <path d="M620 330 C 450 400, 350 380, 264 330"/>
+  </g>
+  <text x="450" y="405" text-anchor="middle" font-size="15" fill="#1f2937">When the stack is empty: run ALL microtasks first, then ONE task, then repeat.</text>
+  <text x="450" y="432" text-anchor="middle" font-size="15" fill="#475569">This is why Promise callbacks run before setTimeout(fn, 0).</text>
+</svg>

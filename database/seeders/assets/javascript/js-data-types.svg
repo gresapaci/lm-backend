@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="900" height="420" fill="#ffffff"/>
+  <text x="450" y="42" text-anchor="middle" font-size="26" font-weight="700" fill="#1f2937">JavaScript Data Types</text>
+  <rect x="40" y="80" width="480" height="300" rx="14" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="280" y="115" text-anchor="middle" font-size="20" font-weight="700" fill="#854d0e">Primitive (copied by value)</text>
+  <g font-size="17" fill="#1f2937">
+    <text x="70" y="160"><tspan font-weight="700">string</tspan><tspan x="190">"hello", 'JS', `Hi ${name}`</tspan></text>
+    <text x="70" y="192"><tspan font-weight="700">number</tspan><tspan x="190">42, 3.14, NaN, Infinity</tspan></text>
+    <text x="70" y="224"><tspan font-weight="700">bigint</tspan><tspan x="190">9007199254740993n</tspan></text>
+    <text x="70" y="256"><tspan font-weight="700">boolean</tspan><tspan x="190">true, false</tspan></text>
+    <text x="70" y="288"><tspan font-weight="700">undefined</tspan><tspan x="190">declared, no value yet</tspan></text>
+    <text x="70" y="320"><tspan font-weight="700">null</tspan><tspan x="190">intentional "no value"</tspan></text>
+    <text x="70" y="352"><tspan font-weight="700">symbol</tspan><tspan x="190">Symbol("id")</tspan></text>
+  </g>
+  <rect x="560" y="80" width="300" height="300" rx="14" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="710" y="115" text-anchor="middle" font-size="20" font-weight="700" fill="#1e3a8a">Object (by reference)</text>
+  <g font-size="17" fill="#1f2937">
+    <text x="590" y="160">{ name: "Ana" }</text>
+    <text x="590" y="192">[1, 2, 3]</text>
+    <text x="590" y="224">function () {}</text>
+    <text x="590" y="256">new Date()</text>
+    <text x="590" y="288">new Map(), new Set()</text>
+    <text x="590" y="320">/regex/g</text>
+  </g>
+  <text x="710" y="360" text-anchor="middle" font-size="14" fill="#475569">typeof null === "object" (historic bug)</text>
+</svg>

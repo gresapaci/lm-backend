@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final Project — Weather Dashboard</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; max-width: 820px; margin: 0 auto; padding: 32px 16px; color: #1f2937; line-height: 1.6; }
+  h1 { border-bottom: 4px solid #f7df1e; padding-bottom: 8px; }
+  h2 { margin-top: 32px; }
+  code, pre { background: #f1f5f9; border-radius: 6px; }
+  code { padding: 2px 6px; }
+  pre { padding: 12px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #e2e8f0; padding: 8px 10px; text-align: left; }
+  th { background: #f8fafc; }
+</style>
+</head>
+<body>
+<h1>Final Project: Weather Dashboard</h1>
+<p>Build a single-page weather dashboard using only HTML, CSS and <strong>vanilla JavaScript</strong> (no frameworks). The project combines everything from the course: DOM manipulation, events, async/await with <code>fetch</code>, modules, classes, error handling and <code>localStorage</code>.</p>
+
+<h2>API</h2>
+<p>Use the free <a href="https://open-meteo.com/">Open-Meteo</a> APIs — no API key required.</p>
+<pre>// 1. City name → coordinates
+https://geocoding-api.open-meteo.com/v1/search?name=Prishtina&amp;count=1
+
+// 2. Coordinates → weather
+https://api.open-meteo.com/v1/forecast?latitude=42.66&amp;longitude=21.17&amp;current=temperature_2m,wind_speed_10m,weather_code&amp;daily=temperature_2m_max,temperature_2m_min&amp;timezone=auto</pre>
+
+<h2>Required features</h2>
+<ol>
+  <li>Search form: the user types a city and sees the current temperature, wind speed and a short description.</li>
+  <li>A 7-day forecast list (min / max temperature per day).</li>
+  <li>Loading state while requests are in progress and a friendly error message if the city is not found or the network fails.</li>
+  <li>"Recent searches" — the last 5 cities, saved in <code>localStorage</code>, clickable to search again.</li>
+  <li>Toggle between °C and °F without making a new request.</li>
+</ol>
+
+<h2>Suggested structure (ES modules)</h2>
+<pre>index.html
+css/style.css
+js/main.js          // wires everything together, event listeners
+js/api.js           // export async function getCoordinates(city), getWeather(lat, lon)
+js/ui.js            // export function renderCurrent(data), renderForecast(days), showError(msg)
+js/storage.js       // export function loadRecent(), saveRecent(city)
+js/units.js         // export const toFahrenheit = (c) =&gt; c * 9 / 5 + 32</pre>
+<p>Load it with <code>&lt;script type="module" src="js/main.js"&gt;&lt;/script&gt;</code> and serve the folder with a local server (e.g. VS Code "Live Server" or <code>npx serve</code>) — modules do not work over <code>file://</code>.</p>
+
+<h2>Grading rubric</h2>
+<table>
+  <tr><th>Criteria</th><th>Points</th></tr>
+  <tr><td>Search + current weather works</td><td>25</td></tr>
+  <tr><td>7-day forecast rendered correctly</td><td>20</td></tr>
+  <tr><td>Loading &amp; error handling (try/catch, <code>res.ok</code> checks)</td><td>15</td></tr>
+  <tr><td>Recent searches with localStorage</td><td>15</td></tr>
+  <tr><td>Unit toggle</td><td>10</td></tr>
+  <tr><td>Code quality: modules, small functions, const/let, no global mess</td><td>15</td></tr>
+  <tr><th>Total</th><th>100</th></tr>
+</table>
+
+<h2>Bonus ideas</h2>
+<ul>
+  <li>Use the browser Geolocation API (<code>navigator.geolocation</code>) to show weather for the user's location.</li>
+  <li>Debounce the search input and show city suggestions while typing.</li>
+  <li>Map <code>weather_code</code> values to icons/emoji.</li>
+  <li>Deploy the project for free on GitHub Pages or Netlify and share the link.</li>
+</ul>
+</body>
+</html>
